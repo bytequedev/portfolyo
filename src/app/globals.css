@@ -1823,7 +1823,6 @@ footer {
 
 /* Scroll animations */
 .fade-in {
-    transform: translateY(50px);
     transition: all 0.8s ease;
 }
 

@@ -1,3 +1,14 @@
+## Byteque
+
+Byteque, web sitesi, admin paneli ve mobil uygulama geliştirme alanlarında uzmanlaşmış bir startup stüdyosudur. Müşterilerimize dijital dönüşüm yolculuklarında yenilikçi, güvenilir ve ölçeklenebilir çözümler sunuyoruz.
+
+### Hizmetlerimiz
+- Kurumsal Web Sitesi
+- Yönetim/Admin Paneli
+- Mobil Uygulama (iOS & Android)
+- Dijital Danışmanlık
+
+Hayalinizdeki dijital projeyi hayata geçirmek için bizimle iletişime geçin!
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

@@ -80,15 +80,15 @@ export default function Navbar() {
       <div className="nav-container">
         <a href="#home" className="logo">
           <div className="logo-icon">⚡</div>
-          <div className="logo-text">Titan Folio</div>
+          <div className="logo-text">ByteQue</div>
         </a>
         <ul className="nav-links">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#timeline">Journey</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#home">Anasayfa</a></li>
+          <li><a href="#about">Hakkımızda</a></li>
+          <li><a href="#skills">Yetenekler</a></li>
+          <li><a href="#timeline">Yolculuk</a></li>
+          <li><a href="#portfolio">Projeler</a></li>
+          <li><a href="#contact">İletişim</a></li>
         </ul>
         <div
           className={`mobile-menu-btn${mobileActive ? " active" : ""}`}
@@ -102,12 +102,12 @@ export default function Navbar() {
       </div>
       <div className={`mobile-nav${mobileActive ? " active" : ""}`} id="mobileNav">
         <ul>
-          <li><a href="#home">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#skills">Skills</a></li>
-          <li><a href="#timeline">Journey</a></li>
-          <li><a href="#portfolio">Portfolio</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#home">Anasayfa</a></li>
+          <li><a href="#about">Hakkımda</a></li>
+          <li><a href="#skills">Yetenekler</a></li>
+          <li><a href="#timeline">Yolculuk</a></li>
+          <li><a href="#portfolio">Projeler</a></li>
+          <li><a href="#contact">İletişim</a></li>
         </ul>
       </div>
     </nav>

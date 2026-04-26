@@ -4,6 +4,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const password = body.password;
   const correctPassword = process.env.ADMIN_PASSWORD;
+  console.log("ENV:", correctPassword);
   if (password === correctPassword) {
     // Basit bir cookie ile giriş durumu
     return NextResponse.json({ ok: true }, {

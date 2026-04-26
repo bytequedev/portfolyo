@@ -14,25 +14,25 @@ export default function Hero() {
         </div>
       </div>
       <div className="hero-content">
-        <h1>Titan Folio</h1>
-        <p className="subtitle">Creative Developer & Designer</p>
-        <p>Crafting digital experiences with passion and precision</p>
+        <h1>Byteque</h1>
+        <p className="subtitle">Startup Studio: Web, Admin Panel & Mobile</p>
+        <p>Yenilikçi dijital çözümler, güçlü yönetim panelleri ve mobil uygulamalar geliştiriyoruz.</p>
         <div className="cta-buttons">
-          <a href="#portfolio" className="cta-primary">View My Work</a>
-          <a href="#contact" className="cta-secondary">Let's Talk</a>
+          <a href="#portfolio" className="cta-primary">Projelerimiz</a>
+          <a href="#contact" className="cta-secondary">İletişime Geçin</a>
         </div>
         <div className="stats-section">
           <div className="stat-card">
-            <span className="stat-number">100+</span>
-            <span className="stat-label">Projects</span>
+            <span className="stat-number">30+</span>
+            <span className="stat-label">Kurumsal Proje</span>
           </div>
           <div className="stat-card">
-            <span className="stat-number">5+</span>
-            <span className="stat-label">Years</span>
+            <span className="stat-number">10+</span>
+            <span className="stat-label">Mobil Uygulama</span>
           </div>
           <div className="stat-card">
-            <span className="stat-number">50+</span>
-            <span className="stat-label">Clients</span>
+            <span className="stat-number">20+</span>
+            <span className="stat-label">Müşteri</span>
           </div>
         </div>
       </div>

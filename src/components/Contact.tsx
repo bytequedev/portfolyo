@@ -1,44 +1,145 @@
+"use client"
+import { FaBriefcase, FaMapMarkerAlt } from "react-icons/fa";
+import { useState } from "react";
+import { db } from "../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
 export default function Contact() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    projectType: "",
+    message: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    projectType: false,
+    message: false
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setTouched({ ...touched, [e.target.name]: true });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setTouched({ name: true, email: true, projectType: true, message: true });
+    setSuccess("");
+    setError("");
+    // Basit doğrulama
+    if (!form.name || !form.email || !form.message) {
+      setError("Lütfen tüm zorunlu alanları doldurun.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await addDoc(collection(db, "contacts"), {
+        name: form.name,
+        email: form.email,
+        projectType: form.projectType,
+        message: form.message,
+        createdAt: new Date()
+      });
+      setSuccess("Mesajınız başarıyla gönderildi!");
+      setForm({ name: "", email: "", projectType: "", message: "" });
+      setTouched({ name: false, email: false, projectType: false, message: false });
+    } catch (err) {
+      setError("Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section id="contact" className="fade-in">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">Let's Create Together</h2>
-          <p className="section-subtitle">Ready to bring your ideas to life? Let's start a conversation</p>
+          <h2 className="section-title">İletişim</h2>
+          <p className="section-subtitle">Fikriniz mi var? Hemen iletişime geçin, birlikte hayata geçirelim!</p>
         </div>
         <div className="contact-content">
           <div className="contact-info">
-            <h3>Get In Touch</h3>
-            <p>I'm always excited to work on new projects and collaborate with amazing people. Whether you have a specific project in mind or just want to explore possibilities, I'd love to hear from you.</p>
+            <h3>Bize Ulaşın</h3>
+            <p>Yeni projeler ve iş birlikleri için her zaman açığız. Web sitesi, admin paneli veya mobil uygulama ihtiyaçlarınız için bize ulaşın.</p>
             <div className="contact-details">
-              <h4>💼 Available for:</h4>
+              <h4><span style={{verticalAlign:'middle'}}><FaBriefcase /></span> Hizmetlerimiz:</h4>
               <ul>
-                <li>Freelance Projects</li>
-                <li>Full-time Opportunities</li>
-                <li>Consulting & Code Reviews</li>
-                <li>Speaking & Workshops</li>
+                <li>Kurumsal Web Sitesi</li>
+                <li>Admin Paneli</li>
+                <li>Mobil Uygulama</li>
+                <li>Dijital Danışmanlık</li>
               </ul>
             </div>
             <div className="contact-details">
-              <h4>📍 Based in:</h4>
-              <p>San Francisco, CA (Open to Remote)</p>
+              <h4><span style={{verticalAlign:'middle'}}><FaMapMarkerAlt /></span> Konum:</h4>
+              <p>Türkiye (Uzaktan hizmet veriyoruz)</p>
             </div>
           </div>
           <div className="contact-form-container">
-            <form className="contact-form">
+            <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-group">
-                <input type="text" className="form-input" placeholder="Your Name" required />
+                <input
+                  type="text"
+                  className={`form-input${touched.name && !form.name ? " form-error" : ""}`}
+                  placeholder="Adınız *"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                />
+                {touched.name && !form.name && <span className="field-error">Adınızı giriniz.</span>}
               </div>
               <div className="form-group">
-                <input type="email" className="form-input" placeholder="Your Email" required />
+                <input
+                  type="email"
+                  className={`form-input${touched.email && !form.email ? " form-error" : ""}`}
+                  placeholder="E-posta adresiniz *"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                />
+                {touched.email && !form.email && <span className="field-error">E-posta adresinizi giriniz.</span>}
               </div>
               <div className="form-group">
-                <input type="text" className="form-input" placeholder="Project Type" required />
+                <input
+                  type="text"
+                  className={`form-input${touched.projectType && !form.projectType ? " form-error" : ""}`}
+                  placeholder="Proje Türü"
+                  name="projectType"
+                  value={form.projectType}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                />
               </div>
               <div className="form-group">
-                <textarea className="form-textarea" rows={5} placeholder="Tell me about your project..." required></textarea>
+                <textarea
+                  className={`form-textarea${touched.message && !form.message ? " form-error" : ""}`}
+                  rows={5}
+                  placeholder="Projenizden bahsedin *"
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                ></textarea>
+                {touched.message && !form.message && <span className="field-error">Mesajınızı yazınız.</span>}
               </div>
-              <button type="submit" className="submit-btn">Send Message</button>
+              <button type="submit" className="submit-btn" disabled={loading}>
+                {loading ? "Gönderiliyor..." : "Mesaj Gönder"}
+              </button>
+              {success && <p className="success-message">{success}</p>}
+              {error && <p className="error-message">{error}</p>}
             </form>
           </div>
         </div>

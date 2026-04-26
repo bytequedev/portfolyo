@@ -1,0 +1,85 @@
+/* admin-table.css - Sadece admin paneli için sade tablo ve filtre stilleri */
+
+.admin-table-container {
+  background: #181d2f;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+}
+.admin-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.admin-table-header h2 {
+  color: #76a9fa;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.admin-table-filters {
+  display: flex;
+  gap: 1rem;
+}
+.admin-table-filters input,
+.admin-table-filters select {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #23273a;
+  background: #23273a;
+  color: #fff;
+  font-size: 1rem;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #23273a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.admin-table th, .admin-table td {
+  padding: 0.9rem 0.7rem;
+  text-align: left;
+}
+.admin-table th {
+  background: #20243a;
+  color: #76a9fa;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.admin-table tr {
+  border-bottom: 1px solid #23273a;
+}
+.admin-table tr:last-child {
+  border-bottom: none;
+}
+.admin-table td {
+  color: #fff;
+  font-size: 0.98rem;
+}
+.admin-table-actions button {
+  background: #76a9fa;
+  color: #181d2f;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: background 0.2s;
+}
+.admin-table-actions button:last-child {
+  margin-right: 0;
+}
+.admin-table-actions button:hover {
+  background: #4f83f7;
+  color: #fff;
+}
+.admin-table-empty {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem 0;
+  font-size: 1.1rem;
+}

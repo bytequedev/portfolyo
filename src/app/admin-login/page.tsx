@@ -15,6 +15,7 @@ export default function AdminLogin() {
       body: JSON.stringify({ password }),
     });
     if (res.ok) {
+      router.refresh();
       router.push("/admin");
     } else {
       setError("Şifre yanlış!");
