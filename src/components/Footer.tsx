@@ -7,7 +7,6 @@ export default function Footer() {
           © 2026 Byteque. Tüm hakları saklıdır.
         </p>
         <div className="footer-credits">
-                <span className="footer-credit-icon"><FaRocket /></span>
           <span>Byteque Yazılım</span>
         </div>
       </div>
