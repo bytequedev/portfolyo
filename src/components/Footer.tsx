@@ -4,10 +4,10 @@ export default function Footer() {
     <footer>
       <div className="footer-bottom">
         <p className="footer-copyright">
-          © 2025 Byteque. Tüm hakları saklıdır.
+          © 2025 ByteQue. Tüm hakları saklıdır.
         </p>
         <div className="footer-credits">
-          <span>Byteque Yazılım</span>
+          <span>ByteQue Yazılım</span>
         </div>
       </div>
     </footer>
