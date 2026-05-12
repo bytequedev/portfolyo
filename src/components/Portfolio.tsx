@@ -21,7 +21,7 @@ interface Project {
 const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
   { label: 'Tümü', value: 'all', icon: <FaBolt /> },
   { label: 'Mobil Uygulamalar', value: 'mobile', icon: <FaMobileAlt /> },
-  { label: 'Web Uygulamaları', value: 'web', icon: <FaGlobe /> },
+  { label: 'Web Siteleri', value: 'web', icon: <FaGlobe /> },
   { label: 'Yapay Zeka Destekli', value: 'ai', icon: <FaRobot /> },
 ];
 
