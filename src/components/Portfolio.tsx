@@ -10,11 +10,12 @@ type Category = 'all' | 'web' | 'mobile' | 'ai';
 interface Project {
   firestoreId?: string;
   id: number;
+  order?: number;
   image: string;
   title: string;
   description: string;
   tags: string[];
-  category: 'web' | 'mobile';
+  category: ('web' | 'mobile' | 'ai')[];
 }
 
 const FILTERS: { label: string; value: Category; icon: React.ReactNode }[] = [
@@ -34,10 +35,19 @@ export default function Portfolio() {
       try {
         const querySnapshot = await getDocs(collection(db, 'projects'));
 
-        const data = querySnapshot.docs.map((doc) => ({
-          firestoreId: doc.id,
-          ...doc.data(),
-        })) as Project[];
+        const data = querySnapshot.docs.map((doc) => {
+          const raw = doc.data();
+          let cat = raw.category;
+          if (typeof cat === 'string') cat = [cat];
+          return {
+            firestoreId: doc.id,
+            ...raw,
+            category: cat || [],
+          };
+        }) as Project[];
+        
+        // Sort by order ascending (fallback to id if order doesn't exist)
+        data.sort((a, b) => (a.order ?? a.id) - (b.order ?? b.id));
 
         setProjects(data);
       } catch (error) {
@@ -51,9 +61,7 @@ export default function Portfolio() {
   const filtered =
     activeFilter === 'all'
       ? projects
-      : activeFilter === 'ai'
-      ? projects.filter((p) => p.tags.some((tag) => tag.toLowerCase().includes('ai')))
-      : projects.filter((p) => p.category === activeFilter);
+      : projects.filter((p) => p.category?.includes(activeFilter as 'web' | 'mobile' | 'ai'));
 
   const openLightbox = (indexInFiltered: number) => setLightboxIndex(indexInFiltered);
   const closeLightbox = () => setLightboxIndex(null);
@@ -115,11 +123,7 @@ export default function Portfolio() {
             const count =
               f.value === 'all'
                 ? projects.length
-                : f.value === 'ai'
-                ? projects.filter((p) =>
-                    p.tags.some((tag) => tag.toLowerCase().includes('ai'))
-                  ).length
-                : projects.filter((p) => p.category === f.value).length;
+                : projects.filter((p) => p.category?.includes(f.value as 'web' | 'mobile' | 'ai')).length;
 
             return (
               <button
