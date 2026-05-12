@@ -10,7 +10,7 @@ import {
   deleteDoc,
   doc,
   query,
-  orderBy,
+  writeBatch,
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '../../../firebaseConfig';
@@ -18,13 +18,14 @@ import './content.css';
 
 /* ─── Types ──────────────────────────────────────────── */
 interface Project {
-  id: string;
+  docId: string;
+  id: number;
   order: number;
   image: string;
   title: string;
   description: string;
   tags: string[];
-  category: 'web' | 'mobile';
+  category: ('web' | 'mobile' | 'ai')[];
   createdAt?: any;
 }
 
@@ -32,7 +33,7 @@ interface FormState {
   title: string;
   description: string;
   image: string;          // URL (Storage ya da manuel)
-  category: 'web' | 'mobile';
+  category: ('web' | 'mobile' | 'ai')[];
   tags: string;
 }
 
@@ -40,7 +41,7 @@ const EMPTY_FORM: FormState = {
   title: '',
   description: '',
   image: '',
-  category: 'web',
+  category: [],
   tags: '',
 };
 
@@ -56,7 +57,11 @@ export default function ContentPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [catFilter, setCatFilter] = useState<'all' | 'web' | 'mobile'>('all');
+  const [catFilter, setCatFilter] = useState<'all' | 'web' | 'mobile' | 'ai'>('all');
+
+  // Drag and drop state
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -80,12 +85,20 @@ export default function ContentPage() {
 
   /* ── Firestore listener ────────────────────────────── */
   useEffect(() => {
-    const q = query(collection(db, 'projects'), orderBy('id', 'asc'));
+    const q = query(collection(db, 'projects')); // removed orderBy to handle missing 'order' fields
     const unsub = onSnapshot(q, (snap) => {
-      const data: Project[] = snap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as Omit<Project, 'id'>),
-      }));
+      const data: Project[] = snap.docs.map((d) => {
+        const raw = d.data();
+        let cat = raw.category;
+        if (typeof cat === 'string') cat = [cat];
+        return {
+          ...(raw as Omit<Project, 'docId' | 'category'>),
+          category: cat || [],
+          docId: d.id,
+        } as Project;
+      });
+      // Sort client-side
+      data.sort((a, b) => (a.order ?? a.id) - (b.order ?? b.id));
       setProjects(data);
       setLoading(false);
     });
@@ -101,7 +114,7 @@ export default function ContentPage() {
 
   /* ── Filtered list ─────────────────────────────────── */
   const displayed = projects.filter((p) => {
-    const matchCat = catFilter === 'all' || p.category === catFilter;
+    const matchCat = catFilter === 'all' || p.category?.includes(catFilter as 'web' | 'mobile' | 'ai');
     const q = search.toLowerCase();
     const matchSearch =
       !q ||
@@ -109,6 +122,56 @@ export default function ContentPage() {
       p.tags.some((t) => t.toLowerCase().includes(q));
     return matchCat && matchSearch;
   });
+
+  const isDraggable = search === '' && catFilter === 'all';
+
+  /* ── Drag & Drop Handlers ──────────────────────────── */
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    dragItem.current = index;
+    e.dataTransfer.effectAllowed = 'move';
+    (e.target as HTMLElement).style.opacity = '0.5';
+  };
+
+  const handleDragEnter = (e: React.DragEvent, index: number) => {
+    dragOverItem.current = index;
+  };
+
+  const handleDragEnd = async (e: React.DragEvent) => {
+    (e.target as HTMLElement).style.opacity = '1';
+    if (dragItem.current === null || dragOverItem.current === null) return;
+    if (dragItem.current === dragOverItem.current) {
+      dragItem.current = null;
+      dragOverItem.current = null;
+      return;
+    }
+
+    const _projects = [...displayed];
+    const draggedItemContent = _projects[dragItem.current];
+    _projects.splice(dragItem.current, 1);
+    _projects.splice(dragOverItem.current, 0, draggedItemContent);
+
+    dragItem.current = null;
+    dragOverItem.current = null;
+
+    const updatedProjects = _projects.map((p, index) => ({
+      ...p,
+      order: index + 1
+    }));
+
+    // Optimistic UI
+    setProjects(updatedProjects);
+
+    try {
+      const batch = writeBatch(db);
+      updatedProjects.forEach((p) => {
+        batch.update(doc(db, 'projects', p.docId), { order: p.order });
+      });
+      await batch.commit();
+      pushToast('success', 'Sıralama başarıyla kaydedildi.');
+    } catch (err: any) {
+      pushToast('error', 'Sıralama güncellenirken hata: ' + err.message);
+    }
+  };
 
   /* ── Reset upload state ────────────────────────────── */
   const resetUpload = () => {
@@ -133,7 +196,7 @@ export default function ContentPage() {
       title: p.title,
       description: p.description,
       image: p.image,
-      category: p.category,
+      category: p.category || [],
       tags: p.tags.join(', '),
     });
     resetUpload();
@@ -215,7 +278,7 @@ export default function ContentPage() {
       };
 
       if (editTarget) {
-        await updateDoc(doc(db, 'projects', editTarget.id), payload);
+        await updateDoc(doc(db, 'projects', editTarget.docId), payload);
         pushToast('success', 'Proje başarıyla güncellendi.');
       } else {
         const maxId =
@@ -252,7 +315,7 @@ export default function ContentPage() {
           // Storage'dan silinemese bile Firestore'dan sil
         }
       }
-      await deleteDoc(doc(db, 'projects', deleteTarget.id));
+      await deleteDoc(doc(db, 'projects', deleteTarget.docId));
       pushToast('success', `"${deleteTarget.title}" silindi.`);
       setDeleteTarget(null);
     } catch (err: any) {
@@ -272,7 +335,7 @@ export default function ContentPage() {
       <div className="cm-topbar">
         <div className="cm-topbar-left">
           <h2 className="cm-title">
-            <span className="cm-title-icon">🗂️</span> İçerik Yönetimi
+            İçerik Yönetimi
           </h2>
           <span className="cm-badge">{projects.length} Proje</span>
         </div>
@@ -303,13 +366,13 @@ export default function ContentPage() {
           )}
         </div>
         <div className="cm-cat-tabs">
-          {(['all', 'web', 'mobile'] as const).map((c) => (
+          {(['all', 'web', 'mobile', 'ai'] as const).map((c) => (
             <button
               key={c}
               className={`cm-cat-tab${catFilter === c ? ' active' : ''}`}
               onClick={() => setCatFilter(c)}
             >
-              {c === 'all' ? '⚡ Tümü' : c === 'web' ? '🌐 Web' : '📱 Mobil'}
+              {c === 'all' ? ' Tümü' : c === 'web' ? ' Web' : c === 'mobile' ? ' Mobil' : ' Yapay Zeka'}
             </button>
           ))}
         </div>
@@ -322,17 +385,21 @@ export default function ContentPage() {
           <span className="cm-stat-label">Toplam</span>
         </div>
         <div className="cm-stat">
-          <span className="cm-stat-num">{projects.filter((p) => p.category === 'web').length}</span>
+          <span className="cm-stat-num">{projects.filter((p) => p.category?.includes('web')).length}</span>
           <span className="cm-stat-label">Web</span>
         </div>
         <div className="cm-stat">
-          <span className="cm-stat-num">{projects.filter((p) => p.category === 'mobile').length}</span>
+          <span className="cm-stat-num">{projects.filter((p) => p.category?.includes('mobile')).length}</span>
           <span className="cm-stat-label">Mobil</span>
         </div>
         <div className="cm-stat">
+          <span className="cm-stat-num">{projects.filter((p) => p.category?.includes('ai')).length}</span>
+          <span className="cm-stat-label">Yapay Zeka</span>
+        </div>
+        {/* <div className="cm-stat">
           <span className="cm-stat-num">{displayed.length}</span>
           <span className="cm-stat-label">Görüntülenen</span>
-        </div>
+        </div> */}
       </div>
 
       {/* ── Cards Grid ───────────────────────────────── */}
@@ -360,15 +427,27 @@ export default function ContentPage() {
         </div>
       ) : (
         <div className="cm-grid">
-          {displayed.map((p) => (
-            <div key={p.id} className="cm-card">
+          {displayed.map((p, index) => (
+            <div
+              key={p.docId}
+              className={`cm-card ${isDraggable ? 'draggable-card' : ''}`}
+              draggable={isDraggable}
+              onDragStart={(e) => isDraggable && handleDragStart(e, index)}
+              onDragEnter={(e) => isDraggable && handleDragEnter(e, index)}
+              onDragEnd={isDraggable ? handleDragEnd : undefined}
+              onDragOver={(e) => e.preventDefault()}
+            >
               <div
                 className="cm-card-img"
                 style={{ backgroundImage: `url('${p.image}')` }}
               >
-                <span className={`cm-cat-badge ${p.category}`}>
-                  {p.category === 'web' ? '🌐 Web' : '📱 Mobil'}
-                </span>
+                <div className="cm-cat-badges">
+                  {p.category?.map(c => (
+                    <span key={c} className={`cm-cat-badge ${c}`}>
+                      {c === 'web' ? '🌐 Web' : c === 'mobile' ? '📱 Mobil' : '🤖 AI'}
+                    </span>
+                  ))}
+                </div>
               </div>
               <div className="cm-card-body">
                 <h3 className="cm-card-title">{p.title}</h3>
@@ -382,7 +461,7 @@ export default function ContentPage() {
                   <button
                     className="cm-btn-edit"
                     onClick={() => openEdit(p)}
-                    id={`btn-edit-${p.id}`}
+                    id={`btn-edit-${p.docId}`}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -393,7 +472,7 @@ export default function ContentPage() {
                   <button
                     className="cm-btn-delete"
                     onClick={() => setDeleteTarget(p)}
-                    id={`btn-delete-${p.id}`}
+                    id={`btn-delete-${p.docId}`}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                       <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
@@ -556,20 +635,34 @@ export default function ContentPage() {
               </div>
 
               <div className="cm-form-row">
-                <div className="cm-form-group">
-                  <label className="cm-label" htmlFor="fm-cat">Kategori</label>
-                  <select
-                    id="fm-cat"
-                    className="cm-input cm-select"
-                    value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value as 'web' | 'mobile' })}
-                    disabled={saving}
-                  >
-                    <option value="web">🌐 Web</option>
-                    <option value="mobile">📱 Mobil</option>
-                  </select>
+                <div className="cm-form-group" style={{ gridColumn: '1 / -1' }}>
+                  <label className="cm-label">Kategoriler *</label>
+                  <div className="cm-cat-checkboxes">
+                    {(['web', 'mobile', 'ai'] as const).map((c) => {
+                      const label = c === 'web' ? '🌐 Web' : c === 'mobile' ? '📱 Mobil' : '🤖 Yapay Zeka';
+                      const isSelected = form.category.includes(c);
+                      return (
+                        <label key={c} className={`cm-cat-check ${isSelected ? 'selected' : ''}`}>
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setForm({ ...form, category: [...form.category, c] });
+                              } else {
+                                setForm({ ...form, category: form.category.filter((cat) => cat !== c) });
+                              }
+                            }}
+                            disabled={saving}
+                            style={{ display: 'none' }}
+                          />
+                          {label}
+                        </label>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="cm-form-group">
+                <div className="cm-form-group" style={{ gridColumn: '1 / -1' }}>
                   <label className="cm-label" htmlFor="fm-tags">Etiketler (virgülle ayır)</label>
                   <input
                     id="fm-tags"

@@ -252,6 +252,14 @@
   border-color: rgba(118, 169, 250, 0.25);
 }
 
+.draggable-card {
+  cursor: grab;
+}
+
+.draggable-card:active {
+  cursor: grabbing;
+}
+
 .cm-card-img {
   height: 160px;
   background-size: cover;
@@ -261,10 +269,17 @@
   flex-shrink: 0;
 }
 
-.cm-cat-badge {
+.cm-cat-badges {
   position: absolute;
   top: 0.6rem;
   right: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-end;
+}
+
+.cm-cat-badge {
   padding: 0.25rem 0.6rem;
   border-radius: 20px;
   font-size: 0.72rem;
@@ -283,6 +298,12 @@
   background: rgba(167, 139, 250, 0.25);
   border: 1px solid rgba(167, 139, 250, 0.4);
   color: #c4b5fd;
+}
+
+.cm-cat-badge.ai {
+  background: rgba(74, 222, 128, 0.25);
+  border: 1px solid rgba(74, 222, 128, 0.4);
+  color: #86efac;
 }
 
 .cm-card-body {
@@ -801,6 +822,35 @@
   background-repeat: no-repeat;
   background-position: right 0.8rem center;
   padding-right: 2rem;
+}
+
+.cm-cat-checkboxes {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.cm-cat-check {
+  background: var(--cm-surface2);
+  border: 1px solid var(--cm-border);
+  color: var(--cm-text-muted);
+  padding: 0.5rem 1rem;
+  border-radius: var(--cm-radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--cm-transition);
+  user-select: none;
+}
+
+.cm-cat-check:hover {
+  border-color: rgba(118, 169, 250, 0.4);
+}
+
+.cm-cat-check.selected {
+  background: rgba(118, 169, 250, 0.12);
+  border-color: var(--cm-blue);
+  color: var(--cm-blue);
+  font-weight: 600;
 }
 
 .cm-tag-preview {
