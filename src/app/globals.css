@@ -1,3 +1,227 @@
+/* Hamburger menu styles */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 1100;
+    margin-top: 20px;
+}
+.hamburger span {
+    display: block;
+    width: 26px;
+    height: 3px;
+    margin: 4px 0;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.3s;
+}
+
+/* Hamburger open state */
+.hamburger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile nav links overlay */
+.mobile-nav-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80vw;
+    height: 80vh;
+    background: rgba(0, 0, 0, 0.93);
+    z-index: 1099;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+.mobile-nav-overlay.open {
+    display: flex;
+}
+.mobile-nav-overlay a {
+    font-size: 1.3rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 2rem;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+}
+.mobile-nav-overlay a.active,
+.mobile-nav-overlay a:hover {
+    background: #f0f0f0;
+    color: #0070f3;
+}
+
+/* Hide bottom nav and show hamburger on mobile */
+@media (max-width: 900px) {
+    .bottom-mobile-nav {
+        display: none !important;
+    }
+    .hamburger {
+        display: flex !important;
+        position: fixed;
+        top: 18px;
+        right: 18px;
+    }
+}
+/* --- DESKTOP NAVBAR (unchanged) --- */
+.navbar-responsive {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: box-shadow 0.3s, background 0.3s;
+}
+.navbar-responsive.scrolled {
+    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+}
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1.5rem;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+.logo-image {
+    border-radius: 50%;
+    overflow: hidden;
+}
+.logo-text {
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: #222;
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nav-links a {
+    color: #222;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.2s;
+}
+.nav-links a.active,
+.nav-links a:hover {
+    color: #0070f3;
+}
+
+/* --- MOBILE NAV ONLY --- */
+
+/* Hamburger dropdown overlay (top slide, not fullscreen) */
+.mobile-nav-overlay {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 0;
+    background: rgba(255,255,255,0.97);
+    z-index: 1099;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    transition: height 0.35s cubic-bezier(.4,0,.2,1);
+    gap: 0;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+.mobile-nav-overlay.open {
+    height: 270px;
+    gap: 0.3rem;
+    padding-top: 1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    overflow-y: auto;
+}
+.mobile-nav-overlay a {
+    font-size: 1rem;
+    color: #222;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0;
+    transition: background 0.2s, color 0.2s;
+    text-align: left;
+    width: 100%;
+    background: transparent;
+    box-sizing: border-box;
+}
+@media (max-width: 400px) {
+    .mobile-nav-overlay.open {
+        height: 220px;
+        padding-top: 0.5rem;
+    }
+    .mobile-nav-overlay a {
+        font-size: 0.92rem;
+        padding: 0.4rem 1rem;
+    }
+}
+.mobile-nav-overlay a.active,
+.mobile-nav-overlay a:hover {
+    background: #f0f0f0;
+    color: #0070f3;
+}
+   
+
+@media (max-width: 600px) {
+    .bottom-nav-item {
+        font-size: 0.75rem;
+        width: 20vw;
+    }
+}
+
+@media (max-width: 400px) {
+    .bottom-nav-item {
+        font-size: 0.7rem;
+        width: 20vw;
+    }
+}
+.bottom-nav-item .active-line {
+    height: 3px;
+    width: 60%;
+    background: transparent;
+    border-radius: 2px;
+    position: absolute;
+    top: 0;
+    left: 20%;
+    transition: background 0.2s;
+}
+.bottom-nav-item.active,
+.bottom-nav-item:hover {
+    color: #0070f3;
+}
+
+@media (min-width: 901px) {
+    .bottom-mobile-nav {
+        display: none !important;
+    }
+}
 /* Modern Admin Sidebar */
 .admin-layout {
     display: flex;
