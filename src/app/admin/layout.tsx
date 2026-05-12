@@ -9,6 +9,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
         <nav>
           <ul>
+            <li><a href="/admin">Dashboard</a></li>
             <li><a href="/admin/support">Destek Talepleri</a></li>
             <li><a href="/admin/content">İçerik Yönetimi</a></li>
           </ul>
