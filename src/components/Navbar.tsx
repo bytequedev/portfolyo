@@ -95,8 +95,8 @@ export default function Navbar() {
         <ul className="nav-links">
           <li><a href="#home">Anasayfa</a></li>
           <li><a href="#about">Hakkımızda</a></li>
-          <li><a href="#skills">Yetenekler</a></li>
           <li><a href="#portfolio">Projeler</a></li>
+          <li><a href="#skills">Sunduklarımız</a></li>
           {/* <li><a href="#timeline">Yolculuk</a></li> */}
           <li><a href="#contact">İletişim</a></li>
         </ul>
@@ -114,9 +114,9 @@ export default function Navbar() {
         <ul>
           <li><a href="#home">Anasayfa</a></li>
           <li><a href="#about">Hakkımda</a></li>
-          <li><a href="#skills">Yetenekler</a></li>
           {/* <li><a href="#timeline">Yolculuk</a></li> */}
           <li><a href="#portfolio">Projeler</a></li>
+           <li><a href="#skills">Sunduklarımız</a></li>
           <li><a href="#contact">İletişim</a></li>
         </ul>
       </div>

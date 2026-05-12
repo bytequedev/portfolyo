@@ -74,12 +74,12 @@ export default function Contact() {
                 <li>Kurumsal Web Sitesi</li>
                 <li>Admin Paneli</li>
                 <li>Mobil Uygulama</li>
-                <li>Dijital Danışmanlık</li>
+                <li>Danışmanlık</li>
               </ul>
             </div>
             <div className="contact-details">
               <h4><span style={{verticalAlign:'middle'}}><FaMapMarkerAlt /></span> Konum:</h4>
-              <p>Türkiye (Uzaktan hizmet veriyoruz)</p>
+              <p>İstanbul, Türkiye</p>
             </div>
           </div>
           <div className="contact-form-container">
