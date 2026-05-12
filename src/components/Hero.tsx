@@ -15,7 +15,7 @@ export default function Hero() {
       </div>
       <div className="hero-content">
         <h1>Byteque</h1>
-        <p className="subtitle">Startup Studio: Web, Admin Panel & Mobile</p>
+        <p className="subtitle">ByteQue Yazılım: Web, Admin Panel & Mobil</p>
         <p>Yenilikçi dijital çözümler, güçlü yönetim panelleri ve mobil uygulamalar geliştiriyoruz.</p>
         <div className="cta-buttons">
           <a href="#portfolio" className="cta-primary">Projelerimiz</a>
@@ -23,15 +23,15 @@ export default function Hero() {
         </div>
         <div className="stats-section">
           <div className="stat-card">
-            <span className="stat-number">30+</span>
-            <span className="stat-label">Kurumsal Proje</span>
+            <span className="stat-number">20+</span>
+            <span className="stat-label">Proje</span>
           </div>
           <div className="stat-card">
             <span className="stat-number">10+</span>
             <span className="stat-label">Mobil Uygulama</span>
           </div>
           <div className="stat-card">
-            <span className="stat-number">20+</span>
+            <span className="stat-number">10+</span>
             <span className="stat-label">Müşteri</span>
           </div>
         </div>

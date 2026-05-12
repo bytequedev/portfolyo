@@ -1,6 +1,7 @@
 
 "use client";
 import { useEffect, useState } from "react";
+    import Image from 'next/image';
 
 export default function Navbar() {
   const [mobileActive, setMobileActive] = useState(false);
@@ -78,16 +79,25 @@ export default function Navbar() {
   return (
     <nav id="navbar" className={scrolled ? "scrolled" : ""}>
       <div className="nav-container">
-        <a href="#home" className="logo">
-          <div className="logo-icon">⚡</div>
-          <div className="logo-text">ByteQue</div>
-        </a>
+
+<a href="#home" className="logo">
+  <div className="logo-image">
+    <Image
+      src="/images/logı.jpeg"
+      alt="ByteQue Logo"
+      width={45}
+      height={45}
+    />
+  </div>
+
+  <div className="logo-text">ByteQue</div>
+</a>
         <ul className="nav-links">
           <li><a href="#home">Anasayfa</a></li>
           <li><a href="#about">Hakkımızda</a></li>
           <li><a href="#skills">Yetenekler</a></li>
           <li><a href="#portfolio">Projeler</a></li>
-          <li><a href="#timeline">Yolculuk</a></li>
+          {/* <li><a href="#timeline">Yolculuk</a></li> */}
           <li><a href="#contact">İletişim</a></li>
         </ul>
         <div
@@ -105,7 +115,7 @@ export default function Navbar() {
           <li><a href="#home">Anasayfa</a></li>
           <li><a href="#about">Hakkımda</a></li>
           <li><a href="#skills">Yetenekler</a></li>
-          <li><a href="#timeline">Yolculuk</a></li>
+          {/* <li><a href="#timeline">Yolculuk</a></li> */}
           <li><a href="#portfolio">Projeler</a></li>
           <li><a href="#contact">İletişim</a></li>
         </ul>

@@ -8,7 +8,7 @@ export default function Footer() {
         </p>
         <div className="footer-credits">
                 <span className="footer-credit-icon"><FaRocket /></span>
-          <span>Byteque Startup Studio</span>
+          <span>Byteque Yazılım</span>
         </div>
       </div>
     </footer>

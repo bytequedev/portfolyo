@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FaPalette, FaGlobe, FaMobileAlt, FaCog, FaRocket, FaShieldAlt } from "react-icons/fa";
 
 export default function Skills() {
@@ -18,7 +19,7 @@ export default function Skills() {
                 <div className="skill-node"><div className="skill-icon"><FaCog /></div><div className="skill-name">Backend</div></div>
                 <div className="skill-node"><div className="skill-icon"><FaRocket /></div><div className="skill-name">Yayınlama</div></div>
                 <div className="skill-node"><div className="skill-icon"><FaShieldAlt /></div><div className="skill-name">Güvenlik</div></div>
-                <div className="skills-center">⚡</div>
+                <div className="skills-center"></div>
               </div>
             </div>
             <div className="skills-list">

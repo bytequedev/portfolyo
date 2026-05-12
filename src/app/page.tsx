@@ -14,9 +14,10 @@ export default function Home() {
       <Navbar />
       <Hero />
       <About />
+            <Portfolio />
+
       <Skills />
-      <Portfolio />
-      <Timeline />
+      {/* <Timeline /> */}
       <Contact />
       <Footer />
     </>
